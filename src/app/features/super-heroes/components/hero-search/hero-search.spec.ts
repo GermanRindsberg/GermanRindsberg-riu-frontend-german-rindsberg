@@ -19,4 +19,18 @@ describe('HeroSearch', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+  
+  /**
+   * Prueba para verificar si el componente emite el texto ingresado en el buscador.
+   */
+  it('should emit the text typed in the search', () => {
+    const terms: string[] = [];
+    component.searchTerm.subscribe((term) => terms.push(term));
+
+    const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+    input.value = 'man';
+    input.dispatchEvent(new Event('input'));
+
+    expect(terms).toEqual(['man']);
+  });
 });

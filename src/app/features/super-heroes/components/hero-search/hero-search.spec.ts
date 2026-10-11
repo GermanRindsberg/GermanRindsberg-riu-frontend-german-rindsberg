@@ -33,4 +33,20 @@ describe('HeroSearch', () => {
 
     expect(terms).toEqual(['man']);
   });
+
+  /**
+   * Prueba para verificar si al borrar el texto el buscador emite un string vacio.
+   */
+  it('should emit an empty string when the search is cleared', () => {
+    const terms: string[] = [];
+    component.searchTerm.subscribe((term) => terms.push(term));
+
+    const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+    input.value = 'man';
+    input.dispatchEvent(new Event('input'));
+    input.value = '';
+    input.dispatchEvent(new Event('input'));
+
+    expect(terms).toEqual(['man', '']);
+  });
 });

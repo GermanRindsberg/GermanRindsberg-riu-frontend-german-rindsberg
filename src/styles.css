@@ -1,1 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
+
+.hero-dialog .mat-mdc-dialog-surface {
+  border: 0;
+  border-radius: 12px;
+  max-height: 92vh;
+  overflow: auto;
+}
+
+@media (max-width: 768px) {
+  .cdk-overlay-pane.hero-dialog {
+    max-width: calc(100vw - 32px) !important;
+  }
+
+  .hero-dialog .mat-mdc-dialog-surface {
+    overflow-x: hidden;
+  }
+}

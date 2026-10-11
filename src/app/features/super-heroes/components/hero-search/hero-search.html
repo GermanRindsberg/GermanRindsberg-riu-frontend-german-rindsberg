@@ -1,4 +1,9 @@
-<mat-form-field>
-  <mat-label>Buscar heroe</mat-label>
-  <input matInput type="search" #search (input)="onSearch(search.value)" />
-</mat-form-field>
+<div class="search">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input
+    type="search"
+    placeholder="Buscar por nombre, editorial o poder"
+    #search
+    (input)="onSearch(search.value)"
+  />
+</div>

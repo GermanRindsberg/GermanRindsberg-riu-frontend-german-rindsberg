@@ -1,13 +1,11 @@
 import { Component, output } from '@angular/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 
 /**
  * Buscador de superheroes por nombre.
  */
 @Component({
   selector: 'app-hero-search',
-  imports: [MatFormFieldModule, MatInputModule],
+  imports: [],
   templateUrl: './hero-search.html',
   styleUrl: './hero-search.css',
 })

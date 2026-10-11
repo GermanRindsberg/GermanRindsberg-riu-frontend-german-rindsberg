@@ -1,9 +1,58 @@
-<form [formGroup]="form">
-  <input formControlName="name" />
-  <input formControlName="description" />
-  <input formControlName="history" />
-  <input formControlName="image" />
-  <input formControlName="power" />
-  <input formControlName="weakness" />
-  <input formControlName="publisher" />
-</form>
+<div class="form-page">
+  <section class="card">
+    <button type="button" class="portrait" aria-label="Cambiar imagen" matTooltip="Click para cambiar imagen" (click)="pickImage()">
+      <img [src]="imageOf()" [alt]="form.controls.name.value || 'Superheroe'" />
+    </button>
+    <input #fileInput type="file" accept="image/*" hidden (change)="onImageSelected($event)" />
+
+    <form [formGroup]="form">
+      <div class="heading">
+        <h1>{{ form.controls.name.value || 'Superheroe' }}</h1>
+        <span [class]="publisherClass(form.controls.publisher.value)">
+          {{ form.controls.publisher.value }}
+        </span>
+        <button type="button" class="close" aria-label="Cerrar" (click)="close()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <label>
+        Nombre
+        <input formControlName="name" [readonly]="!editing()" />
+      </label>
+
+      <label>
+        Descripcion
+        <input formControlName="description" [readonly]="!editing()" />
+      </label>
+
+      <label>
+        Historia
+        <textarea formControlName="history" rows="3" [readonly]="!editing()"></textarea>
+      </label>
+
+      <div class="row">
+        <label>
+          Poder
+          <input formControlName="power" [readonly]="!editing()" />
+        </label>
+        <label>
+          Debilidad
+          <input formControlName="weakness" [readonly]="!editing()" />
+        </label>
+      </div>
+
+      <label>
+        Editorial
+        <input formControlName="publisher" [readonly]="!editing()" />
+      </label>
+
+      <div class="buttons">
+        <button type="button" class="primary" (click)="edit()">
+          {{ editing() ? 'Guardar' : 'Editar' }}
+        </button>
+        <button type="button" class="secondary" (click)="close()">Cancelar</button>
+      </div>
+    </form>
+  </section>
+</div>

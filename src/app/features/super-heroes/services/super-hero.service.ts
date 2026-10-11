@@ -47,6 +47,27 @@ export class SuperHeroService {
   }
 
   /**
+   * Busca superheroes por nombre, editorial o poder.
+   * @param term Texto a buscar.
+   * @returns Superheroes que coinciden. Si el texto esta vacio, devuelve todos.
+   */
+  search(term: string): Observable<SuperHero[]> {
+    const normalizedTerm = term.trim().toLowerCase();
+
+    if (!normalizedTerm) {
+      return this.getAll();
+    }
+
+    const matches = this.heroes.filter((hero) =>
+      [hero.name, hero.publisher, hero.stats.power].some((value) =>
+        value.toLowerCase().includes(normalizedTerm),
+      ),
+    );
+
+    return of(matches.map((hero) => this.copy(hero)));
+  }
+
+  /**
    * Registra un superheroe nuevo.
    * @param hero Datos del superheroe, sin id.
    * @returns El superheroe creado, con su id.

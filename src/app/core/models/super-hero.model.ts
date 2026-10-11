@@ -5,6 +5,7 @@ export interface SuperHero {
   id: number;
   name: string;
   description: string;
+  history: string;
   image: string;
   stats: Stats;
   publisher: Publisher;

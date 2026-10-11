@@ -15,8 +15,18 @@ describe('SuperHeroList', () => {
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
-
+  
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+  
+  /**
+   * Prueba para verificar si el componente muestra el buscador y la tabla.
+   */
+  it('should show the search and the table', () => {
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(element.querySelector('app-hero-search')).toBeTruthy();
+    expect(element.querySelector('app-hero-table')).toBeTruthy();
   });
 });

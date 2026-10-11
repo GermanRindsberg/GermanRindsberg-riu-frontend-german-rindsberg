@@ -68,8 +68,21 @@ describe('SuperHeroService', () => {
   });
 
   /**
-   * Prueba para verificar si el servicio encuentra superheroes cuyo nombre contiene el termino ignorando mayusculas y minusculas.
+   * Prueba para verificar si el servicio busca por nombre, editorial o poder.
    */
+  it('should find heroes by name, publisher or power', async () => {
+    const byName = await firstValueFrom(service.search('spider'));
+    const byPublisher = await firstValueFrom(service.search('DC'));
+    const byPower = await firstValueFrom(service.search('anillo'));
+    const all = await firstValueFrom(service.search(''));
+
+    expect(byName.map((hero) => hero.name)).toEqual(['Spiderman']);
+    expect(byPublisher.map((hero) => hero.name)).toContain('Batman');
+    expect(byPublisher.map((hero) => hero.name)).not.toContain('Thor');
+    expect(byPower.map((hero) => hero.name)).toContain('Linterna Verde');
+    expect(all.length).toBe(SUPER_HEROES.length);
+  });
+
   it('should ignore uppercase and lowercase when searching', async () => {
     const heroes = await firstValueFrom(service.searchByName('MAN'));
 

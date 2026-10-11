@@ -1,10 +1,93 @@
-<table>
-  @for (hero of heroes(); track hero.id) {
-    <tr>
-      <td>{{ hero.name }}</td>
-      <td>
-        <button type="button" (click)="onDelete(hero.id)">Borrar</button>
+<div class="table-card">
+  <!-- Vision desktop -->
+  <div class="table-wrap">
+  <table mat-table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="hero">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Heroe</th>
+      <td mat-cell *matCellDef="let hero">
+        <div class="hero-cell">
+          <img [src]="imageOf(hero)" [alt]="hero.name" />
+          <div>
+            <span class="hero-name">{{ hero.name }}</span>
+            <span class="hero-description">{{ hero.description }}</span>
+          </div>
+        </div>
       </td>
-    </tr>
-  }
-</table>
+    </ng-container>
+
+    <ng-container matColumnDef="publisher">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Editorial</th>
+      <td mat-cell *matCellDef="let hero">
+        <span [class]="publisherClass(hero.publisher)">{{ hero.publisher }}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="history">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Historia</th>
+      <td mat-cell *matCellDef="let hero">
+        <span class="summary" [title]="hero.history">{{ hero.history }}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="power">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Poder</th>
+      <td mat-cell *matCellDef="let hero">{{ hero.stats.power }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="weakness">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Debilidad</th>
+      <td mat-cell *matCellDef="let hero">{{ hero.stats.weakness }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="actions-header">Acciones</th>
+      <td mat-cell *matCellDef="let hero">
+        <div class="actions">
+          <button type="button" class="icon-button" aria-label="Editar" (click)="onEdit(hero.id)">
+            <i class="fa-regular fa-pen-to-square"></i>
+          </button>
+          <button type="button" class="icon-button delete" aria-label="Borrar" (click)="onDelete(hero.id)">
+            <i class="fa-regular fa-trash-can"></i>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+  </div>
+
+  
+  <!-- Vision movil -->
+  <div class="cards">
+    @for (hero of pageHeroes(); track hero.id) {
+      <article class="hero-card">
+        <img class="card-background" [src]="imageOf(hero)" alt="" />
+        <div class="hero-cell">
+          <img [src]="imageOf(hero)" [alt]="hero.name" />
+          <div>
+            <span class="hero-title">
+              <span class="hero-name">{{ hero.name }}</span>
+              <span [class]="publisherClass(hero.publisher)">{{ hero.publisher }}</span>
+            </span>
+            <span class="hero-description">{{ hero.description }}</span>
+          </div>
+        </div>
+        <p class="summary" [title]="hero.history">{{ hero.history }}</p>
+        <p><strong>Poder:</strong> {{ hero.stats.power }}</p>
+        <p><strong>Debilidad:</strong> {{ hero.stats.weakness }}</p>
+        <div class="actions">
+          <button type="button" class="icon-button" aria-label="Editar" (click)="onEdit(hero.id)">
+            <i class="fa-regular fa-pen-to-square"></i>
+          </button>
+          <button type="button" class="icon-button delete" aria-label="Borrar" (click)="onDelete(hero.id)">
+            <i class="fa-regular fa-trash-can"></i>
+          </button>
+        </div>
+      </article>
+    }
+  </div>
+
+  <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10]" />
+</div>

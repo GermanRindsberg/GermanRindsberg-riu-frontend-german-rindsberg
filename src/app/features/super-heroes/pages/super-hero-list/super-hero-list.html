@@ -1,3 +1,5 @@
-<app-hero-search />
-<app-hero-table />
+<div class="table-container">
+  <app-hero-search (searchTerm)="onSearch($event)" />
+  <app-hero-table [heroes]="heroes()" (editHero)="onEdit($event)" />
+</div>
 

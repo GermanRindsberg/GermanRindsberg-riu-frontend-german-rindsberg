@@ -1,0 +1,323 @@
+:host {
+  display: block;
+}
+/**
+ * Card de la tabla.
+ */
+.table-card {
+  background: #fff;
+  border: 1px solid #c7c4d8;
+  border-radius: 12px;
+  box-shadow: 0 1px 6px rgba(20, 27, 43, 0.06);
+  overflow: hidden;
+}
+
+/**
+ * Tabla.
+ */
+table {
+  width: 100%;
+}
+
+/**
+ * Fila de encabezado.
+ */
+.mat-mdc-header-row {
+  background: #f1f3ff;
+}
+
+/**
+ * Celda.
+ */
+.mat-mdc-cell {
+  color: #141b2b;
+}
+
+/**
+ * Celda de encabezado.
+ */
+.mat-mdc-header-cell {
+  color: #141b2b;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/**
+ * Fila par.
+ */
+.mat-mdc-row:nth-child(even) {
+  background: #f4f6ff;
+}
+
+/**
+ * Fila impar.
+ */
+.mat-mdc-row:nth-child(odd) {
+  background: #fff;
+}
+
+/**
+ * Fila hover.
+ */
+.mat-mdc-row:hover {
+  background: #e7ebff;
+}
+
+/**
+ * Celda del heroe.
+ */
+.hero-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/**
+ * Imagen del heroe.
+ */
+.hero-cell img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: contain;
+  background: #e9edff;
+}
+
+/**
+ * Div del heroe.
+ */
+.hero-cell div {
+  display: flex;
+  flex-direction: column;
+}
+
+/**
+ * Nombre del heroe.
+ */
+  .hero-name {
+  font-weight: 600;
+  color: #141b2b;
+}
+
+/**
+ * Descripcion del heroe.
+ */
+.hero-description {
+  color: #141b2b;
+  font-size: 13px;
+}
+
+/**
+ * Resumen del heroe.
+ */
+.summary {
+  color: #141b2b;
+  font-size: 13px;
+}
+
+.summary {
+  display: block;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/**
+ * Badge del heroe.
+ */
+.badge {
+  display: inline-flex;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/**
+ * Badge de Marvel.
+ */
+.badge-marvel {
+  background: #ffdad6;
+  color: #93000a;
+}
+
+/**
+ * Badge de DC.
+ */
+.badge-dc {
+  background: #e3dfff;
+  color: #372abf;
+}
+
+/**
+ * Badge de otros.
+ */
+.badge-other {
+  background: #acedff;
+  color: #004e5c;
+}
+
+/**
+ * Acciones de encabezado.
+ */
+.actions-header {
+  text-align: right;
+}
+
+/**
+ * Acciones.
+ */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+/**
+ * Icono del boton.
+ */
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #777587;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/**
+ * Icono del boton hover.
+ */
+.icon-button:hover {
+  background: #e9edff;
+  color: #141b2b;
+}
+
+/**
+ * Boton de eliminar hover.
+ */
+.delete:hover {
+  background: #ffdad6;
+  color: #ba1a1a;
+}
+
+/**********************************************************************************************************************/
+/**
+ * Vision movil.
+ */
+/**********************************************************************************************************************/
+
+/**
+ * Oculta Cards en tamaño mayor a 768.
+ */
+.cards {
+  display: none;
+}
+
+/**
+  * Muestra Cards en tamaño menor a 768px.
+ */
+.hero-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px;
+  padding: 16px;
+  overflow: hidden;
+  border: 1px solid #c7c4d8;
+  border-radius: 12px;
+  background: #fff;
+}
+
+/**
+ * Fondo del card.
+ */
+.card-background {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+  opacity: 0.14;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/**
+ * Contenido del card.
+ */
+.hero-card > :not(.card-background) {
+  position: relative;
+  z-index: 1;
+}
+
+/**
+ * Titulo del card.
+ */
+.hero-card .hero-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+/**
+ * Resumen del card.
+ */
+.hero-card .summary {
+  max-width: none;
+  white-space: normal;
+}
+
+/**
+ * Acciones del card.
+ */
+.hero-card .actions {
+  justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+  /**
+   * Oculta Tabla en tamaño menor a 768px.
+   */
+  .table-wrap {
+    display: none;
+  }
+
+  /**
+   * Muestra Cards en tamaño menor a 768px.
+   */
+  .cards {
+    display: block;
+  }
+
+  /**
+   * Elimina borde y sombra del card en tamaño menor a 768px.
+   */
+  .table-card {
+    border: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+}
+
+/**
+ * Paginator.
+ */
+.mat-mdc-paginator {
+  background: #f1f3ff;
+  color: #141b2b;
+}

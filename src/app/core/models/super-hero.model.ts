@@ -24,4 +24,5 @@ export interface Stats {
 export enum Publisher {
   Marvel = 'Marvel',
   Dc = 'DC',
+  Other = 'Other',
 }

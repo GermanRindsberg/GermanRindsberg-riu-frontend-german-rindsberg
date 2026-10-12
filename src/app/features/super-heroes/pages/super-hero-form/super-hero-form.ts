@@ -1,26 +1,47 @@
-import { Component, effect, ElementRef, inject, input, signal, viewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, input, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { Publisher, SuperHero } from '../../../../core/models/super-hero.model';
+import { Uppercase } from '../../directives/uppercase';
+import { Publisher, SuperHero, publisherLabel } from '../../../../core/models/super-hero.model';
+import { SuperHeroService } from '../../services/super-hero.service';
+
+/**
+ * Datos del dialogo. Sin heroe, el formulario se abre para crear.
+ */
+export interface HeroDialogData {
+  creating?: boolean;
+  hero?: SuperHero;
+}
 
 /**
  * Dialogo para ver un superheroe.
  */
 @Component({
   selector: 'app-super-hero-form',
-  imports: [ReactiveFormsModule, MatTooltipModule],
+  imports: [ReactiveFormsModule, MatTooltipModule, Uppercase],
   templateUrl: './super-hero-form.html',
   styleUrl: './super-hero-form.css',
 })
 export class SuperHeroForm {
   private readonly formBuilder = inject(FormBuilder);
-  private readonly dialogHero = inject<SuperHero | null>(MAT_DIALOG_DATA, { optional: true });
+  private readonly superHeroService = inject(SuperHeroService);
+  private readonly dialogData = inject<HeroDialogData | SuperHero | null>(MAT_DIALOG_DATA, {
+    optional: true,
+  });
   private readonly dialogRef = inject(MatDialogRef<SuperHeroForm>, { optional: true });
 
   readonly hero = input<SuperHero>();
-  readonly editing = signal(false);
+  readonly publisherLabel = publisherLabel;
+
+  readonly publishers = [
+    { value: Publisher.Marvel, label: 'Marvel' },
+    { value: Publisher.Dc, label: 'DC' },
+    { value: Publisher.Other, label: 'Otro' },
+  ];
+
+  private heroId: number | null = null;
 
   private readonly fileInput = viewChild<ElementRef<HTMLInputElement>>('fileInput');
 
@@ -29,15 +50,13 @@ export class SuperHeroForm {
     description: [''],
     history: [''],
     image: [''],
-    power: [''],
+    power: ['', Validators.required],
     weakness: [''],
-    publisher: [Publisher.Marvel],
+    publisher: ['', Validators.required],
   });
 
   constructor() {
-    if (this.dialogHero) {
-      this.fill(this.dialogHero);
-    }
+    this.applyDialogData(this.dialogData);
 
     effect(() => {
       const hero = this.hero();
@@ -59,11 +78,45 @@ export class SuperHeroForm {
   }
 
   /**
-   * Habilita la edicion del formulario.
+   * Indica si hay que mostrar el error de un campo obligatorio.
+   * @param name Nombre del campo.
+   * @returns True cuando el campo es invalido y el usuario ya interactuo.
+   */
+  showError(name: 'name' | 'power' | 'publisher'): boolean {
+    const control = this.form.controls[name];
+
+    return control.invalid && control.touched;
+  }
+
+  /**
+   * Guarda el superheroe en la sesion.
    * @returns No retorna un valor.
    */
-  edit(): void {
-    this.editing.set(true);
+  save(): void {
+    this.form.markAllAsTouched();
+
+    if (this.form.invalid) {
+      return;
+    }
+
+    const value = this.form.getRawValue();
+    const hero = {
+      name: value.name,
+      description: value.description,
+      history: value.history,
+      image: value.image,
+      publisher: value.publisher as Publisher,
+      stats: { power: value.power, weakness: value.weakness },
+    };
+    const request = this.heroId
+      ? this.superHeroService.update({ ...hero, id: this.heroId })
+      : this.superHeroService.create(hero);
+
+    request.subscribe((saved) => {
+      if (saved) {
+        this.dialogRef?.close(true);
+      }
+    });
   }
 
   /**
@@ -90,7 +143,6 @@ export class SuperHeroForm {
 
     reader.onload = () => {
       this.form.controls.image.setValue(String(reader.result));
-      this.editing.set(true);
     };
 
     reader.readAsDataURL(file);
@@ -109,7 +161,7 @@ export class SuperHeroForm {
    * @param publisher Editorial del superheroe.
    * @returns Clase CSS de la etiqueta.
    */
-  publisherClass(publisher: Publisher): string {
+  publisherClass(publisher: string): string {
     if (publisher === Publisher.Marvel) {
       return 'badge badge-marvel';
     }
@@ -122,11 +174,25 @@ export class SuperHeroForm {
   }
 
   /**
-   * Completa el formulario con los datos del superheroe.
-   * @param hero Superheroe seleccionado.
+   * Prepara el formulario segun los datos del dialogo.
+   * @param data Heroe a ver, o la marca de creacion.
    * @returns No retorna un valor.
    */
+  private applyDialogData(data: HeroDialogData | SuperHero | null): void {
+    if (!data) {
+      return;
+    }
+
+    if ('creating' in data && data.creating) {
+      return;
+    }
+
+    const hero = 'hero' in data && data.hero ? data.hero : (data as SuperHero);
+    this.fill(hero);
+  }
+
   private fill(hero: SuperHero): void {
+    this.heroId = hero.id;
     this.form.patchValue({
       name: hero.name,
       description: hero.description,

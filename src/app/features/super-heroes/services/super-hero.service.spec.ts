@@ -32,7 +32,7 @@ describe('SuperHeroService', () => {
     const heroes = await firstValueFrom(service.getAll());
 
     expect(heroes.length).toBe(SUPER_HEROES.length);
-    expect(heroes.map((hero) => hero.name)).toContain('Spiderman');
+    expect(heroes.map((hero) => hero.name)).toContain('SPIDERMAN');
   });
 
   /**
@@ -41,7 +41,7 @@ describe('SuperHeroService', () => {
   it('should return one hero by id', async () => {
     const hero = await firstValueFrom(service.getById(2));
 
-    expect(hero?.name).toBe('Superman');
+    expect(hero?.name).toBe('SUPERMAN');
   });
 
   /**
@@ -60,11 +60,11 @@ describe('SuperHeroService', () => {
     const heroes = await firstValueFrom(service.searchByName('man'));
     const names = heroes.map((hero) => hero.name);
 
-    expect(names).toContain('Spiderman');
-    expect(names).toContain('Superman');
-    expect(names).toContain('Batman');
-    expect(names).toContain('Ironman');
-    expect(names).not.toContain('Thor');
+    expect(names).toContain('SPIDERMAN');
+    expect(names).toContain('SUPERMAN');
+    expect(names).toContain('BATMAN');
+    expect(names).toContain('IRONMAN');
+    expect(names).not.toContain('THOR');
   });
 
   /**
@@ -76,17 +76,17 @@ describe('SuperHeroService', () => {
     const byPower = await firstValueFrom(service.search('anillo'));
     const all = await firstValueFrom(service.search(''));
 
-    expect(byName.map((hero) => hero.name)).toEqual(['Spiderman']);
-    expect(byPublisher.map((hero) => hero.name)).toContain('Batman');
-    expect(byPublisher.map((hero) => hero.name)).not.toContain('Thor');
-    expect(byPower.map((hero) => hero.name)).toContain('Linterna Verde');
+    expect(byName.map((hero) => hero.name)).toEqual(['SPIDERMAN']);
+    expect(byPublisher.map((hero) => hero.name)).toContain('BATMAN');
+    expect(byPublisher.map((hero) => hero.name)).not.toContain('THOR');
+    expect(byPower.map((hero) => hero.name)).toContain('LINTERNA VERDE');
     expect(all.length).toBe(SUPER_HEROES.length);
   });
 
   it('should ignore uppercase and lowercase when searching', async () => {
     const heroes = await firstValueFrom(service.searchByName('MAN'));
 
-    expect(heroes.map((hero) => hero.name)).toContain('Superman');
+    expect(heroes.map((hero) => hero.name)).toContain('SUPERMAN');
   });
   
   /**
@@ -134,11 +134,67 @@ describe('SuperHeroService', () => {
    * Prueba para verificar si el servicio elimina un superheroe correctamente.
    */
   it('should delete a hero', async () => {
+    const before = await firstValueFrom(service.getAll());
+
     await firstValueFrom(service.delete(1));
     const hero = await firstValueFrom(service.getById(1));
     const heroes = await firstValueFrom(service.getAll());
 
     expect(hero).toBeUndefined();
-    expect(heroes.length).toBe(SUPER_HEROES.length - 1);
+    expect(heroes.length).toBe(before.length - 1);
+  });
+
+  /**
+   * Prueba para verificar si actualizar un id inexistente no cambia el listado.
+   */
+  it('should return undefined when updating a missing hero', async () => {
+    const before = await firstValueFrom(service.getAll());
+    const updated = await firstValueFrom(
+      service.update({
+        id: 999,
+        name: 'Nadie',
+        description: '',
+        history: '',
+        image: '',
+        stats: { power: '', weakness: '' },
+        publisher: Publisher.Other,
+      }),
+    );
+
+    expect(updated).toBeUndefined();
+    expect((await firstValueFrom(service.getAll())).length).toBe(before.length);
+  });
+
+  /**
+   * Prueba para verificar si el alta no comparte la referencia con quien lo pidio.
+   */
+  it('should keep the stored hero isolated from the created object', async () => {
+    const created = await firstValueFrom(
+      service.create({
+        name: 'Nova',
+        description: 'Centurion',
+        history: 'Casco de Xandar.',
+        image: '',
+        stats: { power: 'Energia', weakness: 'El casco' },
+        publisher: Publisher.Marvel,
+      }),
+    );
+
+    created.name = 'Cambiado';
+    created.stats.power = 'Nada';
+
+    const stored = await firstValueFrom(service.getById(created.id));
+
+    expect(stored?.name).toBe('Nova');
+    expect(stored?.stats.power).toBe('Energia');
+  });
+
+  /**
+   * Prueba para verificar si la busqueda ignora espacios alrededor del texto.
+   */
+  it('should trim the search term', async () => {
+    const heroes = await firstValueFrom(service.search('  thor  '));
+
+    expect(heroes.map((hero) => hero.name)).toEqual(['THOR']);
   });
 });

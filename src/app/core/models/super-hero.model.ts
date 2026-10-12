@@ -27,3 +27,16 @@ export enum Publisher {
   Dc = 'DC',
   Other = 'Other',
 }
+
+/**
+ * Texto de la editorial para mostrar en la interfaz.
+ * @param publisher Valor guardado de la editorial.
+ * @returns Etiqueta en espanol.
+ */
+export function publisherLabel(publisher: string): string {
+  if (publisher === Publisher.Other) {
+    return 'Otro';
+  }
+
+  return publisher;
+}

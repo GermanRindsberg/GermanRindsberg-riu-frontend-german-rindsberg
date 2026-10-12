@@ -104,8 +104,8 @@ describe('HeroTable', () => {
     const text = (fixture.nativeElement as HTMLElement).textContent;
 
     expect(rows.length).toBe(5);
-    expect(text).toContain('Ironman');
-    expect(text).not.toContain('Thor');
+    expect(text).toContain('IRONMAN');
+    expect(text).not.toContain('THOR');
   });
 
   /**

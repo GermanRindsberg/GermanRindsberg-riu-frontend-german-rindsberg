@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { Observable, delay, finalize, of } from 'rxjs';
 
-import { SuperHero } from '../../../core/models/super-hero.model';
+import { LoadingService } from '../../../core/interceptors/loading.interceptor';
+import { SuperHero, publisherLabel } from '../../../core/models/super-hero.model';
 import { SUPER_HEROES } from './super-heroes.mock';
 
 /** 
@@ -11,6 +12,7 @@ import { SUPER_HEROES } from './super-heroes.mock';
   providedIn: 'root',
 })
 export class SuperHeroService {
+  private readonly loading = inject(LoadingService);
   private heroes: SuperHero[] = SUPER_HEROES.map((hero) => this.copy(hero));
 
   /**
@@ -59,7 +61,7 @@ export class SuperHeroService {
     }
 
     const matches = this.heroes.filter((hero) =>
-      [hero.name, hero.publisher, hero.stats.power].some((value) =>
+      [hero.name, publisherLabel(hero.publisher), hero.stats.power].some((value) =>
         value.toLowerCase().includes(normalizedTerm),
       ),
     );
@@ -78,7 +80,7 @@ export class SuperHeroService {
 
     this.heroes = [...this.heroes, created];
 
-    return of(this.copy(created));
+    return this.withLoading(of(this.copy(created)), 800);
   }
 
   /**
@@ -90,12 +92,12 @@ export class SuperHeroService {
     const index = this.heroes.findIndex((item) => item.id === hero.id);
 
     if (index < 0) {
-      return of(undefined);
+      return this.withLoading(of(undefined), 800);
     }
 
     this.heroes[index] = this.copy(hero);
 
-    return of(this.copy(hero));
+    return this.withLoading(of(this.copy(hero)), 800);
   }
 
   /**
@@ -106,7 +108,22 @@ export class SuperHeroService {
   delete(id: number): Observable<void> {
     this.heroes = this.heroes.filter((hero) => hero.id !== id);
 
-    return of(undefined);
+    return this.withLoading(of(undefined));
+  }
+
+  /**
+   * Muestra el loading mientras dura una alta, edicion o baja.
+   * @param source Operacion a ejecutar.
+   * @param responseTime Tiempo simulado de respuesta, en milisegundos.
+   * @returns La misma operacion, con el loading asociado.
+   */
+  private withLoading<T>(source: Observable<T>, responseTime = 400): Observable<T> {
+    this.loading.show();
+
+    return source.pipe(
+      delay(responseTime),
+      finalize(() => this.loading.hide()),
+    );
   }
 
   /**

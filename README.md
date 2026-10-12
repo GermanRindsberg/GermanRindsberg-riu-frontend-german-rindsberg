@@ -1,59 +1,68 @@
-# RiuFrontend
+# MINDATA Frontend Challenge
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.2.
+SPA en Angular 22 para la gestion de superheroes (CRUD). No hay backend: los datos viven en memoria dentro del servicio y se mantienen mientras dura la sesion. Al recargar la pagina vuelven al listado inicial.
 
-## Development server
+## Que hace
 
-To start a local development server, run:
+- Lista paginada de superheroes, con orden por columnas.
+- En pantallas chicas la tabla se reemplaza por tarjetas, con el mismo paginador.
+- Buscador por nombre, editorial o poder. No distingue mayusculas y minusculas.
+- Alta, edicion y baja. La baja pide confirmacion antes de borrar utilizando sweetalert2.
+- El formulario es un mat-dialog. Nombre, poder y editorial son obligatorios, manejando esos errores de forma dinamica.
+- Si un heroe no tiene imagen, se muestra `public/images/default.png`. La imagen se puede cambiar desde el dialogo.
 
-```bash
-ng serve
-```
+## Particularidades
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+El nombre se escribe siempre en mayusculas. La directiva `appUppercase` (`src/app/features/super-heroes/directives/uppercase.ts`) escucha el input del nombre, pasa el texto a mayusculas y conserva la posicion del cursor.
 
-## Code scaffolding
+Alta, edicion y baja pasan por `withLoading` en el servicio. Muestra el spinner, espera un tiempo simulado con `delay` de RxJS y lo oculta al terminar. El alta y la edicion esperan 800 ms. La baja espera 400 ms. El interceptor de loading hace lo mismo para peticiones HTTP; como no hay backend, el servicio llama al `LoadingService` directo. El spinner se dibuja sobre el dialogo con la API `popover` del navegador, porque el dialogo de Material queda en una capa que tapa un overlay comun.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+La editorial se guarda como `Marvel`, `DC` u `Other`. En la pantalla, `Other` se muestra como Otro.
 
-```bash
-ng generate component component-name
-```
+Cada heroe que sale del servicio es una copia. Si la pantalla modifica el objeto, el listado guardado no cambia hasta que se confirma el guardado.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+La busqueda de la lista usa `search`, que mira nombre, editorial y poder. El servicio tambien expone `searchByName`, que filtra solo por nombre.
 
-```bash
-ng generate --help
-```
+## Dependencias
 
-## Building
+- Angular 22, con componentes standalone, signals y formularios reactivos.
+- Angular Material para la tabla, el paginador, el dialogo y el tooltip.
+- Bootstrap 5 para la base de estilos.
+- Font Awesome para los iconos de editar, borrar y cerrar.
+- SweetAlert2 para confirmar el borrado.
+- ngx-sonner como toaster de la aplicacion.
+- RxJS para devolver los datos del servicio como observables.
 
-To build the project run:
+Los tests corren con Vitest, que es el runner de `ng test`.
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Como ejecutarlo
 
 ```bash
-ng test
+npm install
+npm start
 ```
 
-## Running end-to-end tests
+La aplicacion queda en `http://localhost:4200/`.
 
-For end-to-end (e2e) testing, run:
+Tests:
 
 ```bash
-ng e2e
+npx ng test --watch=false
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Cobertura:
 
-## Additional Resources
+```bash
+npx ng test --watch=false --coverage
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Docker
+
+Hace falta Docker Desktop. En la raiz del proyecto:
+
+```bash
+docker build -t riu-frontend .
+docker run -p 8080:80 riu-frontend
+```
+
+La primera orden compila la aplicacion dentro de una imagen de Node y deja solo los archivos estaticos en una imagen de nginx. La segunda publica esa imagen en `http://localhost:8080/`.

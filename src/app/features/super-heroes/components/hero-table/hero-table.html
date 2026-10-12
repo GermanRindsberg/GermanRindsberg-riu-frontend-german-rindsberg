@@ -18,7 +18,7 @@
     <ng-container matColumnDef="publisher">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Editorial</th>
       <td mat-cell *matCellDef="let hero">
-        <span [class]="publisherClass(hero.publisher)">{{ hero.publisher }}</span>
+        <span [class]="publisherClass(hero.publisher)">{{ publisherLabel(hero.publisher) }}</span>
       </td>
     </ng-container>
 
@@ -69,7 +69,7 @@
           <div>
             <span class="hero-title">
               <span class="hero-name">{{ hero.name }}</span>
-              <span [class]="publisherClass(hero.publisher)">{{ hero.publisher }}</span>
+              <span [class]="publisherClass(hero.publisher)">{{ publisherLabel(hero.publisher) }}</span>
             </span>
             <span class="hero-description">{{ hero.description }}</span>
           </div>

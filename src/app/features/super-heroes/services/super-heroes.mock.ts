@@ -6,7 +6,7 @@ import { Publisher, SuperHero } from '../../../core/models/super-hero.model';
 export const SUPER_HEROES: SuperHero[] = [
   {
     id: 1,
-    name: 'Spiderman',
+    name: 'SPIDERMAN',
     description: 'Trepa muros y lanza telarañas.',
     history: 'Mordido por una araña radiactiva.',
     image: 'images/spiderman.png',
@@ -15,7 +15,7 @@ export const SUPER_HEROES: SuperHero[] = [
   },
   {
     id: 2,
-    name: 'Superman',
+    name: 'SUPERMAN',
     description: 'Viene de Krypton y protege Metropolis.',
     history: 'Enviado a la Tierra desde Krypton.',
     image: 'images/superman.svg',
@@ -24,7 +24,7 @@ export const SUPER_HEROES: SuperHero[] = [
   },
   {
     id: 3,
-    name: 'Batman',
+    name: 'BATMAN',
     description: 'Vigila Gotham sin superpoderes pero tecnologia.',
     history: 'Vio morir a sus padres en Gotham.',
     image: 'images/batman.png',
@@ -33,7 +33,7 @@ export const SUPER_HEROES: SuperHero[] = [
   },
   {
     id: 4,
-    name: 'Wonder Woman',
+    name: 'WONDER WOMAN',
     description: 'Guerrera amazona.',
     history: 'Princesa de las amazonas.',
     image: 'images/mujermaravilla.png',
@@ -42,7 +42,7 @@ export const SUPER_HEROES: SuperHero[] = [
   },
   {
     id: 5,
-    name: 'Ironman',
+    name: 'IRONMAN',
     description: 'Tony Stark y su armadura.',
     history: 'Construyo la armadura para sobrevivir.',
     image: 'images/ironman.jpg',
@@ -51,7 +51,7 @@ export const SUPER_HEROES: SuperHero[] = [
   },
   {
     id: 6,
-    name: 'Thor',
+    name: 'THOR',
     description: 'Dios del trueno.',
     history: 'Heredero de Asgard.',
     image: 'images/thor.png',
@@ -60,7 +60,7 @@ export const SUPER_HEROES: SuperHero[] = [
   },
   {
     id: 11,
-    name: 'Linterna Verde',
+    name: 'LINTERNA VERDE',
     description: 'El anillo hace lo que imagina.',
     history: 'Elegido por el anillo.',
     image: 'images/linterna.svg',
@@ -69,7 +69,7 @@ export const SUPER_HEROES: SuperHero[] = [
   },
   {
     id: 7,
-    name: 'Deadpool',
+    name: 'DEADPOOL',
     description: 'Mercenario que se regenera.',
     history: 'Un experimento le dio regeneracion.',
     image: 'images/deadpool.png',
@@ -78,7 +78,7 @@ export const SUPER_HEROES: SuperHero[] = [
   },
   {
     id: 8,
-    name: 'Wolverine',
+    name: 'WOLVERINE',
     description: 'Mutante con garras de adamantium.',
     history: 'Arma X le cubrio los huesos de adamantium.',
     image: 'images/wolverine.png',

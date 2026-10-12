@@ -30,7 +30,7 @@ La busqueda de la lista usa `search`, que mira nombre, editorial y poder. El ser
 - Bootstrap 5 para la base de estilos.
 - Font Awesome para los iconos de editar, borrar y cerrar.
 - SweetAlert2 para confirmar el borrado.
-- ngx-sonner como toaster de la aplicacion.
+- ngx-sonner muestra un aviso al crear, editar o eliminar un superheroe.
 - RxJS para devolver los datos del servicio como observables.
 
 Los tests corren con Vitest, que es el runner de `ng test`.

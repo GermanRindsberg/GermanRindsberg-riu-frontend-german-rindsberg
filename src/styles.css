@@ -31,6 +31,26 @@
   }
 }
 
+[data-sonner-toast] {
+  background: #b7e4c7 !important;
+  color: #141b2b !important;
+  border: 0 !important;
+  border-radius: 16px !important;
+  font-size: 16px !important;
+  font-weight: 600;
+  padding: 18px 22px !important;
+  width: 380px !important;
+}
+
+[data-sonner-toast] [data-title] {
+  color: #141b2b !important;
+  font-size: 16px !important;
+}
+
+[data-sonner-toast] svg {
+  color: #141b2b;
+}
+
 .hero-dialog .mat-mdc-dialog-surface {
   border: 0;
   border-radius: 12px;

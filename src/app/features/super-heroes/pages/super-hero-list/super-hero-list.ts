@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { toast } from 'ngx-sonner';
 import Swal from 'sweetalert2';
 
 import { SuperHero } from '../../../../core/models/super-hero.model';
@@ -82,7 +83,10 @@ export class SuperHeroList implements OnInit {
         return;
       }
 
-      this.superHeroService.delete(id).subscribe(() => this.load(this.term));
+      this.superHeroService.delete(id).subscribe(() => {
+        this.load(this.term);
+        toast.success('Superheroe eliminado.');
+      });
     });
   }
 
@@ -104,9 +108,12 @@ export class SuperHeroList implements OnInit {
       })
       .afterClosed()
       .subscribe((saved) => {
-        if (saved) {
-          this.load(this.term);
+        if (!saved) {
+          return;
         }
+
+        this.load(this.term);
+        toast.success(data.creating ? 'Superheroe creado.' : 'Superheroe actualizado.');
       });
   }
 

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { toast } from 'ngx-sonner';
 import { firstValueFrom } from 'rxjs';
 import Swal from 'sweetalert2';
 
@@ -87,6 +88,7 @@ describe('SuperHeroList', () => {
    */
   it('should create, edit and delete a hero during the session', async () => {
     vi.spyOn(Swal, 'fire').mockResolvedValue({ isConfirmed: true } as Awaited<ReturnType<typeof Swal.fire>>);
+    const notice = vi.spyOn(toast, 'success').mockImplementation(() => 1);
     const element = () => fixture.nativeElement as HTMLElement;
 
     (element().querySelector('.create') as HTMLButtonElement).click();
@@ -108,6 +110,7 @@ describe('SuperHeroList', () => {
 
     const service = TestBed.inject(SuperHeroService);
     expect((await firstValueFrom(service.getAll())).some((item) => item.name === 'FLASH')).toBe(true);
+    expect(notice).toHaveBeenCalledWith('Superheroe creado.');
 
     const search = element().querySelector('input') as HTMLInputElement;
     search.value = 'flash';
@@ -127,6 +130,7 @@ describe('SuperHeroList', () => {
     fixture.detectChanges();
 
     expect((await firstValueFrom(service.getAll())).some((item) => item.name === 'BARRY ALLEN')).toBe(true);
+    expect(notice).toHaveBeenCalledWith('Superheroe actualizado.');
 
     search.value = 'barry';
     search.dispatchEvent(new Event('input'));
@@ -140,5 +144,6 @@ describe('SuperHeroList', () => {
 
     await new Promise((resolve) => setTimeout(resolve, 900));
     expect((await firstValueFrom(service.getAll())).some((item) => item.name === 'BARRY ALLEN')).toBe(false);
+    expect(notice).toHaveBeenCalledWith('Superheroe eliminado.');
   });
 });

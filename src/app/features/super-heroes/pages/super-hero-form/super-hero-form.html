@@ -9,7 +9,7 @@
       <div class="heading">
         <h1>{{ form.controls.name.value || 'Superheroe' }}</h1>
         <span [class]="publisherClass(form.controls.publisher.value)">
-          {{ form.controls.publisher.value }}
+          {{ publisherLabel(form.controls.publisher.value) }}
         </span>
         <button type="button" class="close" aria-label="Cerrar" (click)="close()">
           <i class="fa-solid fa-xmark"></i>
@@ -18,38 +18,52 @@
 
       <label>
         Nombre
-        <input formControlName="name" [readonly]="!editing()" />
+        <input appUppercase formControlName="name" />
+        @if (showError('name')) {
+          <span class="error">El nombre es obligatorio.</span>
+        }
       </label>
 
       <label>
         Descripcion
-        <input formControlName="description" [readonly]="!editing()" />
+        <input formControlName="description" />
       </label>
 
       <label>
         Historia
-        <textarea formControlName="history" rows="3" [readonly]="!editing()"></textarea>
+        <textarea formControlName="history" rows="3"></textarea>
       </label>
 
       <div class="row">
         <label>
           Poder
-          <input formControlName="power" [readonly]="!editing()" />
+          <input formControlName="power" />
+          @if (showError('power')) {
+            <span class="error">El poder es obligatorio.</span>
+          }
         </label>
         <label>
           Debilidad
-          <input formControlName="weakness" [readonly]="!editing()" />
+          <input formControlName="weakness" />
         </label>
       </div>
 
       <label>
         Editorial
-        <input formControlName="publisher" [readonly]="!editing()" />
+        <select formControlName="publisher">
+          <option value="">Seleccionar</option>
+          @for (publisher of publishers; track publisher.value) {
+            <option [value]="publisher.value">{{ publisher.label }}</option>
+          }
+        </select>
+        @if (showError('publisher')) {
+          <span class="error">La editorial es obligatoria.</span>
+        }
       </label>
 
       <div class="buttons">
-        <button type="button" class="primary" (click)="edit()">
-          {{ editing() ? 'Guardar' : 'Editar' }}
+        <button type="button" class="primary" (click)="save()">
+          Guardar
         </button>
         <button type="button" class="secondary" (click)="close()">Cancelar</button>
       </div>

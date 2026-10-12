@@ -1,5 +1,12 @@
 <div class="table-container">
-  <app-hero-search (searchTerm)="onSearch($event)" />
-  <app-hero-table [heroes]="heroes()" (editHero)="onEdit($event)" />
+  <div class="toolbar">
+    <app-hero-search (searchTerm)="onSearch($event)" />
+    <button type="button" class="create" (click)="onCreate()">Nuevo heroe</button>
+  </div>
+  <app-hero-table
+    [heroes]="heroes()"
+    (editHero)="onEdit($event)"
+    (deleteHero)="onDelete($event)"
+  />
 </div>
 

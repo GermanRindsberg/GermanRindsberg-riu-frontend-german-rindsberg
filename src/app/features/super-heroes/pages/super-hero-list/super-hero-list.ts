@@ -1,10 +1,11 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import Swal from 'sweetalert2';
 
 import { SuperHero } from '../../../../core/models/super-hero.model';
 import { HeroSearch } from '../../components/hero-search/hero-search';
 import { HeroTable } from '../../components/hero-table/hero-table';
-import { SuperHeroForm } from '../super-hero-form/super-hero-form';
+import { HeroDialogData, SuperHeroForm } from '../super-hero-form/super-hero-form';
 import { SuperHeroService } from '../../services/super-hero.service';
 
 /**
@@ -22,6 +23,8 @@ export class SuperHeroList implements OnInit {
 
   readonly heroes = signal<SuperHero[]>([]);
 
+  private term = '';
+
   ngOnInit(): void {
     this.load('');
   }
@@ -32,7 +35,16 @@ export class SuperHeroList implements OnInit {
    * @returns No retorna un valor.
    */
   onSearch(term: string): void {
+    this.term = term;
     this.load(term);
+  }
+
+  /**
+   * Abre el formulario vacio para crear un superheroe.
+   * @returns No retorna un valor.
+   */
+  onCreate(): void {
+    this.openDialog({ creating: true });
   }
 
   /**
@@ -47,15 +59,55 @@ export class SuperHeroList implements OnInit {
       return;
     }
 
-    this.dialog.open(SuperHeroForm, {
-      data: hero,
-      width: '760px',
-      maxWidth: 'calc(100vw - 24px)',
-      maxHeight: '92vh',
-      autoFocus: false,
-      disableClose: true,
-      panelClass: 'hero-dialog',
+    this.openDialog({ hero });
+  }
+
+  /**
+   * Pide confirmacion y elimina el superheroe de la sesion.
+   * @param id Identificador del superheroe.
+   * @returns No retorna un valor.
+   */
+  onDelete(id: number): void {
+    const hero = this.heroes().find((item) => item.id === id);
+
+    Swal.fire({
+      title: 'Eliminar superheroe',
+      text: hero ? `Se va a eliminar a ${hero.name}.` : 'Se va a eliminar el superheroe.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (!result.isConfirmed) {
+        return;
+      }
+
+      this.superHeroService.delete(id).subscribe(() => this.load(this.term));
     });
+  }
+
+  /**
+   * Abre el dialogo y recarga el listado si se guardo algo.
+   * @param data Heroe a ver, o la marca de creacion.
+   * @returns No retorna un valor.
+   */
+  private openDialog(data: HeroDialogData): void {
+    this.dialog
+      .open(SuperHeroForm, {
+        data,
+        width: '760px',
+        maxWidth: 'calc(100vw - 24px)',
+        maxHeight: '92vh',
+        autoFocus: false,
+        disableClose: true,
+        panelClass: 'hero-dialog',
+      })
+      .afterClosed()
+      .subscribe((saved) => {
+        if (saved) {
+          this.load(this.term);
+        }
+      });
   }
 
   /**

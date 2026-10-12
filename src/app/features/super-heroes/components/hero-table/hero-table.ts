@@ -4,7 +4,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 
-import { Publisher, SuperHero } from '../../../../core/models/super-hero.model';
+import { Publisher, SuperHero, publisherLabel } from '../../../../core/models/super-hero.model';
 
 /**
  * Componente para mostrar la tabla de superheroes.
@@ -32,6 +32,8 @@ export class HeroTable {
   /**
    * Columnas a mostrar en la tabla.
    */       
+  readonly publisherLabel = publisherLabel;
+
   readonly displayedColumns = ['hero', 'publisher', 'history', 'power', 'weakness', 'actions'];
   /**
    * Fuente de datos para la tabla.
